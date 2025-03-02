@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/api";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,9 @@ export function ProjectCard({
   const [siteName, setSiteName] = useState<string>("");
   const [isHovering, setIsHovering] = useState(false);
   const [isCurrentUserAuthor, setIsCurrentUserAuthor] = useState(false);
+  const [isVoting, setIsVoting] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
+  const [voteCount, setVoteCount] = useState(upvotes);
   const router = useRouter();
 
   useEffect(() => {
@@ -65,7 +68,10 @@ export function ProjectCard({
     if (currentUser && author && currentUser.nickname === author) {
       setIsCurrentUserAuthor(true);
     }
-  }, [postLink, author]);
+
+    // Initialize vote count
+    setVoteCount(upvotes);
+  }, [postLink, author, upvotes]);
 
   const getStatusLabel = (status: ProjectStatus) => {
     switch (status) {
@@ -94,6 +100,25 @@ export function ProjectCard({
     router.push(`/board/post/edit?id=${id}`);
   };
 
+  const handleVote = async () => {
+    // Import voteForProject and use it
+    const { voteForProject } = await import('@/lib/auth');
+    
+    setIsVoting(true);
+    try {
+      const success = await voteForProject(id);
+      if (success) {
+        // Toggle the vote status
+        setHasVoted(prev => !prev);
+        setVoteCount(prev => hasVoted ? prev - 1 : prev + 1);
+      }
+    } catch (error) {
+      console.error('Error voting:', error);
+    } finally {
+      setIsVoting(false);
+    }
+  };
+
   return (
     <Card 
       className={cn(
@@ -120,10 +145,15 @@ export function ProjectCard({
             <Button 
               variant="outline" 
               size="sm" 
-              className="flex items-center gap-1.5 bg-transparent border h-10 px-4 text-base cursor-pointer text-[#3B475A] hover:text-[#3B475A]/80"
+              className={`flex items-center gap-1.5 bg-transparent border h-10 px-4 text-base cursor-pointer ${hasVoted ? 'bg-slate-100 text-blue-600' : 'text-[#3B475A] hover:text-[#3B475A]/80'}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleVote();
+              }}
+              disabled={isVoting}
             >
               <ChevronUp className="h-5 w-5" />
-              <span>{upvotes}</span>
+              <span>{voteCount}</span>
             </Button>
           </div>
         </div>

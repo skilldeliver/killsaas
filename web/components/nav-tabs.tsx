@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, logoutUser, isAuthenticated } from '@/lib/auth';
 
 const tabs = [
   { name: 'Board', href: '/board' },
@@ -13,13 +13,24 @@ const tabs = [
 
 export function NavTabs() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nickname, setNickname] = useState('');
 
   useEffect(() => {
     // Check if user is logged in on client side
+    setIsLoggedIn(isAuthenticated());
     const user = getCurrentUser();
-    setIsLoggedIn(!!user);
+    if (user) {
+      setNickname(user.nickname);
+    }
   }, [pathname]); // Re-check when pathname changes
+  
+  const handleLogout = () => {
+    logoutUser();
+    setIsLoggedIn(false);
+    router.push('/');
+  }
 
   return (
     <div className="border-b">
@@ -48,17 +59,25 @@ export function NavTabs() {
 
         <div className="flex">
           {isLoggedIn ? (
-            <Link
-              href="/profile"
-              className={cn(
-                'inline-flex items-center px-6 py-4 border-b-2 text-sm font-medium',
-                pathname === '/profile'
-                  ? 'border-[#3B475A] text-[#3B475A]'
-                  : 'border-transparent text-[#3B475A]/70 hover:text-[#3B475A] hover:border-[#3B475A]/30'
-              )}
-            >
-              Profile
-            </Link>
+            <>
+              <Link
+                href="/profile"
+                className={cn(
+                  'inline-flex items-center px-6 py-4 border-b-2 text-sm font-medium',
+                  pathname === '/profile'
+                    ? 'border-[#3B475A] text-[#3B475A]'
+                    : 'border-transparent text-[#3B475A]/70 hover:text-[#3B475A] hover:border-[#3B475A]/30'
+                )}
+              >
+                {nickname || 'Profile'}
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center px-6 py-4 border-b-2 border-transparent text-sm font-medium text-[#3B475A]/70 hover:text-[#3B475A] hover:border-[#3B475A]/30"
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <Link

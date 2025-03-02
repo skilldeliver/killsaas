@@ -1,2 +1,4 @@
 node_modules
 .env
+docs
+pb_data

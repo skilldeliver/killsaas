@@ -16,13 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCurrentUser, getAllPosts } from "@/lib/auth";
+import { getCurrentUser, getProjectById, saveProject } from "@/lib/api";
 
 export default function PostEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const postId = searchParams.get("id");
-  const isEditMode = !!postId;
+  const projectId = searchParams.get("id");
+  const isEditMode = !!projectId;
   
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -31,39 +31,53 @@ export default function PostEdit() {
   const [status, setStatus] = useState<"proposed" | "in_progress" | "completed">("proposed");
   const [techStack, setTechStack] = useState<string[]>([]);
   const [techInput, setTechInput] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   
-  // Ensure user is logged in
+  // Ensure user is logged in and load project data if editing
   useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!currentUser) {
-      router.push("/login");
-      return;
-    }
-    
-    // If editing, load post data
-    if (isEditMode) {
-      const posts = getAllPosts();
-      const post = posts.find(p => p.id === postId);
-      
-      if (post) {
-        // Check if current user is the author
-        if (post.author !== currentUser.nickname) {
-          router.push("/board");
+    async function loadData() {
+      try {
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+          router.push("/login");
           return;
         }
         
-        setTitle(post.title);
-        setDescription(post.description || "");
-        setGithubRepo(post.githubRepo || "");
-        setPostLink(post.postLink || "");
-        setStatus(post.status);
-        setTechStack(post.techStack || []);
-      } else {
-        // Post not found
-        router.push("/board");
+        // If editing, load project data
+        if (isEditMode && projectId) {
+          const project = await getProjectById(projectId);
+          
+          if (project) {
+            // Check if current user is the author
+            if (!currentUser.nickname || project.author !== currentUser.nickname) {
+              router.push("/board");
+              return;
+            }
+            
+            setTitle(project.title);
+            setDescription(project.description || "");
+            setGithubRepo(project.githubRepo || "");
+            setPostLink(project.postLink || "");
+            setStatus(project.status);
+            setTechStack(project.techStack || []);
+          } else {
+            // Project not found
+            setError('Project not found');
+            setTimeout(() => router.push("/board"), 3000);
+          }
+        }
+      } catch (err) {
+        console.error('Error loading project:', err);
+        setError('Failed to load project');
+      } finally {
+        setIsLoading(false);
       }
     }
-  }, [postId, isEditMode, router]);
+    
+    loadData();
+  }, [projectId, isEditMode, router]);
   
   const handleAddTech = () => {
     if (techInput.trim() && !techStack.includes(techInput.trim())) {
@@ -76,7 +90,7 @@ export default function PostEdit() {
     setTechStack(techStack.filter(t => t !== tech));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const currentUser = getCurrentUser();
@@ -85,37 +99,49 @@ export default function PostEdit() {
       return;
     }
     
-    const posts = getAllPosts();
-    
-    // Create new post object
-    const newPost = {
-      id: isEditMode ? postId : Math.random().toString(36).substring(2, 9),
-      title,
-      description,
-      githubRepo,
-      postLink,
-      status,
-      techStack,
-      upvotes: isEditMode ? posts.find(p => p.id === postId)?.upvotes || 0 : 0,
-      commentsCount: isEditMode ? posts.find(p => p.id === postId)?.commentsCount || 0 : 0,
-      comments: isEditMode ? posts.find(p => p.id === postId)?.comments || [] : [],
-      author: currentUser.nickname,
-      createdAt: isEditMode ? posts.find(p => p.id === postId)?.createdAt || new Date().toISOString() : new Date().toISOString()
-    };
-    
-    if (isEditMode) {
-      // Update existing post
-      const updatedPosts = posts.map(p => p.id === postId ? newPost : p);
-      localStorage.setItem('killsaas-posts', JSON.stringify(updatedPosts));
-    } else {
-      // Add new post
-      localStorage.setItem('killsaas-posts', JSON.stringify([...posts, newPost]));
+    try {
+      setIsSaving(true);
+      
+      // Create new project object
+      const projectData = {
+        id: isEditMode && projectId ? projectId : undefined,
+        title,
+        description,
+        githubRepo,
+        postLink,
+        status,
+        techStack
+      };
+      
+      // Save project to PocketBase
+      const savedProject = await saveProject(projectData);
+      
+      // Redirect to the project page
+      router.push(`/board/post/${savedProject?.id}`);
+    } catch (err) {
+      console.error('Error saving project:', err);
+      setError('Failed to save project. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-    
-    // Redirect to the post page
-    router.push(`/board/post/${newPost.id}`);
   };
   
+  if (isLoading) {
+    return (
+      <main className="w-full flex-1 p-6 md:p-8 max-w-[900px] mx-auto">
+        <div className="mb-6">
+          <Link href="/board" className="inline-flex items-center text-[#3B475A] hover:text-[#3B475A]/80">
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to Board
+          </Link>
+        </div>
+        <Card className="p-6 text-center">
+          <p className="text-[#3B475A]/70">Loading...</p>
+        </Card>
+      </main>
+    );
+  }
+
   return (
     <main className="w-full flex-1 p-6 md:p-8 max-w-[900px] mx-auto">
       <div className="mb-6">
@@ -125,9 +151,15 @@ export default function PostEdit() {
         </Link>
       </div>
       
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 text-red-500 rounded-md border border-red-200">
+          {error}
+        </div>
+      )}
+      
       <Card className="p-6">
         <h1 className="text-2xl font-bold font-[family-name:var(--font-louize)] mb-6 text-[#3B475A]">
-          {isEditMode ? "Edit Post" : "Create New Post"}
+          {isEditMode ? "Edit Project" : "Create New Project"}
         </h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -238,8 +270,8 @@ export default function PostEdit() {
             >
               Cancel
             </Button>
-            <Button type="submit">
-              {isEditMode ? "Update Post" : "Create Post"}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? "Saving..." : isEditMode ? "Update Project" : "Create Project"}
             </Button>
           </div>
         </form>

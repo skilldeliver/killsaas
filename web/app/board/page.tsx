@@ -4,7 +4,7 @@ import { ProjectExamples } from "@/components/project-examples";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { isAuthenticated } from "@/lib/api";
 import { useEffect, useState } from "react";
 
 export default function Board() {
@@ -12,7 +12,7 @@ export default function Board() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
   useEffect(() => {
-    setIsLoggedIn(!!getCurrentUser());
+    setIsLoggedIn(isAuthenticated());
   }, []);
   
   const handleNewPost = () => {
