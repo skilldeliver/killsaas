@@ -22,7 +22,13 @@ export async function getUserVotes(userId: string): Promise<Vote[]> {
   }
 }
 
-export async function voteForProject(projectId: string): Promise<boolean> {
+export interface VoteResult {
+  success: boolean;
+  hasVoted: boolean;
+  upvoteCount: number;
+}
+
+export async function voteForProject(projectId: string): Promise<VoteResult> {
   try {
     const currentUser = getCurrentUser();
     
@@ -36,20 +42,41 @@ export async function voteForProject(projectId: string): Promise<boolean> {
       requestKey: `check-vote-${projectId}`
     });
     
+    let hasVoted = false;
+    
     if (existingVotes.items.length > 0) {
       // User has already voted, so remove the vote
       await pb.collection('votes').delete(existingVotes.items[0].id);
-      return false; // No longer voted
+      hasVoted = false; // No longer voted
     } else {
       // User has not voted, so add a new vote
+      console.log("Voting for project:", projectId)
+      console.log("User", currentUser.id)
+
       await pb.collection('votes').create({
         user: currentUser.id,
         project: projectId
       });
-      return true; // Now voted
+      hasVoted = true; // Now voted
     }
+    
+    // Get the updated vote count
+    const votes = await pb.collection('votes').getList(1, 1, {
+      filter: `project="${projectId}"`,
+      requestKey: `votes-count-${projectId}`
+    });
+    
+    return {
+      success: true,
+      hasVoted: hasVoted,
+      upvoteCount: votes.totalItems
+    };
   } catch (error) {
     console.error('Error voting for project:', error);
-    return false;
+    return {
+      success: false,
+      hasVoted: false,
+      upvoteCount: 0
+    };
   }
 }

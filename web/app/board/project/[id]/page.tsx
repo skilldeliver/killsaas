@@ -11,7 +11,7 @@ import { Comments } from "@/components/comments";
 import { getCurrentUser, getProjectById, voteForProject, ProjectWithVotes } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
-export default function PostDetail() {
+export default function ProjectDetail() {
   const { id } = useParams();
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -46,12 +46,30 @@ export default function PostDetail() {
   }, [id]);
 
   const handleVote = async () => {
-    if (!currentUser || !project || isVoting) return;
+    if (!project || isVoting) return;
+    
+    // Check if user is authenticated
+    if (!currentUser) {
+      router.push('/login');
+      return;
+    }
     
     try {
       setIsVoting(true);
-      const updatedProject = await voteForProject(project.id);
-      setProject(updatedProject);
+      // Call the vote API
+      const result = await voteForProject(project.id);
+      
+      if (result.success) {
+        // Update the local state without fetching the whole project again
+        setProject(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            hasVoted: result.hasVoted,
+            upvotes: result.upvoteCount
+          };
+        });
+      }
     } catch (err) {
       console.error('Error voting for project:', err);
     } finally {
@@ -118,7 +136,7 @@ export default function PostDetail() {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={() => router.push(`/board/post/edit?id=${project.id}`)}
+            onClick={() => router.push(`/board/project/edit?id=${project.id}`)}
             className="flex items-center gap-1"
           >
             <Edit className="h-4 w-4" />
@@ -200,18 +218,18 @@ export default function PostDetail() {
                 </div>
               )}
               
-              {project.postLink && (
+              {(project.postLink || project.saasTarget) && (
                 <div className="flex items-start">
                   <ExternalLink className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">SaaS</div>
                     <a 
-                      href={project.postLink} 
+                      href={project.postLink || project.saasTarget} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:text-[#3B475A]/80 text-sm flex items-center"
                     >
-                      {getSiteName(project.postLink)}
+                      {getSiteName(project.postLink || project.saasTarget)}
                       <ExternalLink className="h-3 w-3 ml-1" />
                     </a>
                   </div>

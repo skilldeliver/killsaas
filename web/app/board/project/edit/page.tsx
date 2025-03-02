@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { getCurrentUser, getProjectById, saveProject } from "@/lib/api";
 
-export default function PostEdit() {
+export default function ProjectEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("id");
@@ -27,7 +27,7 @@ export default function PostEdit() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [githubRepo, setGithubRepo] = useState("");
-  const [postLink, setPostLink] = useState("");
+  const [saasTarget, setSaasTarget] = useState("");
   const [status, setStatus] = useState<"proposed" | "in_progress" | "completed">("proposed");
   const [techStack, setTechStack] = useState<string[]>([]);
   const [techInput, setTechInput] = useState("");
@@ -59,7 +59,7 @@ export default function PostEdit() {
             setTitle(project.title);
             setDescription(project.description || "");
             setGithubRepo(project.githubRepo || "");
-            setPostLink(project.postLink || "");
+            setSaasTarget(project.postLink || project.saasTarget || "");
             setStatus(project.status);
             setTechStack(project.techStack || []);
           } else {
@@ -108,7 +108,7 @@ export default function PostEdit() {
         title,
         description,
         githubRepo,
-        postLink,
+        saasTarget,
         status,
         techStack
       };
@@ -117,7 +117,7 @@ export default function PostEdit() {
       const savedProject = await saveProject(projectData);
       
       // Redirect to the project page
-      router.push(`/board/post/${savedProject?.id}`);
+      router.push(`/board/project/${savedProject?.id}`);
     } catch (err) {
       console.error('Error saving project:', err);
       setError('Failed to save project. Please try again.');
@@ -196,11 +196,11 @@ export default function PostEdit() {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="postLink">SaaS Link (optional)</Label>
+            <Label htmlFor="saasTarget">SaaS Link (optional)</Label>
             <Input 
-              id="postLink" 
-              value={postLink} 
-              onChange={(e) => setPostLink(e.target.value)} 
+              id="saasTarget" 
+              value={saasTarget} 
+              onChange={(e) => setSaasTarget(e.target.value)} 
               placeholder="https://example.com"
             />
           </div>

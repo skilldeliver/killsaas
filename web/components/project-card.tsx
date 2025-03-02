@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/lib/api";
+import { getCurrentUser, voteForProject } from "@/lib/api";
+import { isAuthenticated } from "@/lib/api/auth";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ interface ProjectCardProps extends React.ComponentProps<typeof Card> {
   title: string;
   githubRepo?: string;
   postLink?: string;
+  saasTarget?: string;
   status: ProjectStatus;
   upvotes?: number;
   commentsCount?: number;
@@ -37,6 +39,7 @@ export function ProjectCard({
   title,
   githubRepo,
   postLink,
+  saasTarget,
   status,
   upvotes = 0,
   commentsCount = 0,
@@ -53,9 +56,10 @@ export function ProjectCard({
   const router = useRouter();
 
   useEffect(() => {
-    if (postLink) {
+    const url = postLink || saasTarget;
+    if (url) {
       try {
-        const hostname = new URL(postLink).hostname;
+        const hostname = new URL(url).hostname;
         // Remove www. prefix and get the domain name
         setSiteName(hostname.replace(/^www\./, ''));
       } catch (error) {
@@ -69,9 +73,27 @@ export function ProjectCard({
       setIsCurrentUserAuthor(true);
     }
 
-    // Initialize vote count
+    // Initialize vote count and check if user has voted
     setVoteCount(upvotes);
-  }, [postLink, author, upvotes]);
+    
+    const checkVoteStatus = async () => {
+      try {
+        const { getCurrentUser } = await import('@/lib/api');
+        const user = getCurrentUser();
+        
+        if (user) {
+          const { getUserVotes } = await import('@/lib/api');
+          const votes = await getUserVotes(user.id);
+          const voted = votes.some(vote => vote.project === id);
+          setHasVoted(voted);
+        }
+      } catch (error) {
+        console.error('Error checking vote status:', error);
+      }
+    };
+    
+    checkVoteStatus();
+  }, [postLink, author, upvotes, id]);
 
   const getStatusLabel = (status: ProjectStatus) => {
     switch (status) {
@@ -92,25 +114,28 @@ export function ProjectCard({
       return;
     }
     
-    router.push(`/board/post/${id}`);
+    router.push(`/board/project/${id}`);
   };
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/board/post/edit?id=${id}`);
+    router.push(`/board/project/edit?id=${id}`);
   };
 
   const handleVote = async () => {
-    // Import voteForProject and use it
-    const { voteForProject } = await import('@/lib/auth');
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
     
     setIsVoting(true);
     try {
-      const success = await voteForProject(id);
-      if (success) {
-        // Toggle the vote status
-        setHasVoted(prev => !prev);
-        setVoteCount(prev => hasVoted ? prev - 1 : prev + 1);
+      const result = await voteForProject(id);
+      if (result.success) {
+        // Update based on the returned values
+        setHasVoted(result.hasVoted);
+        setVoteCount(result.upvoteCount);
       }
     } catch (error) {
       console.error('Error voting:', error);
@@ -161,9 +186,9 @@ export function ProjectCard({
           <span className="inline-block px-2 py-0.5 text-xs border rounded-full text-[#3B475A]">
             {getStatusLabel(status)}
           </span>
-          {postLink && (
+          {(postLink || saasTarget) && (
             <Link 
-              href={postLink} 
+              href={postLink || saasTarget} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-sm text-[#3B475A] hover:text-[#3B475A]/80 flex items-center gap-1.5 group"
@@ -172,7 +197,7 @@ export function ProjectCard({
             >
               <div className="relative w-4 h-4 overflow-hidden">
                 <Image 
-                  src={`https://www.google.com/s2/favicons?domain=${new URL(postLink).hostname}&sz=64`}
+                  src={`https://www.google.com/s2/favicons?domain=${new URL(postLink || saasTarget).hostname}&sz=64`}
                   alt="Website favicon"
                   width={16}
                   height={16}

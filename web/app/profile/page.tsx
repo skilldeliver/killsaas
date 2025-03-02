@@ -114,11 +114,6 @@ export default function Profile() {
           {projects.length === 0 ? (
             <div className="text-center py-12 rounded-lg border">
               <p className="text-[#3B475A]/70 mb-4">You haven't created any projects yet</p>
-              <Button
-                onClick={handleNewPost}
-              >
-                Create First Project
-              </Button>
             </div>
           ) : (
             <div className="space-y-4">

@@ -76,9 +76,13 @@ export async function saveProject(project: Partial<Project>): Promise<Project | 
       throw new Error('User not authenticated');
     }
     
+    // Projects collection uses a relation field named 'author' linked to users
+    // Handle saasTarget and postLink fields consistently
+    const { postLink, saasTarget, ...rest } = project;
     const formData = {
-      ...project,
-      author: currentUser.id
+      ...rest,
+      author: currentUser.id,  // This is a relation field that needs the user ID
+      saasTarget: saasTarget || postLink  // Use either field name, preferring saasTarget
     };
     
     let result;
@@ -133,10 +137,12 @@ async function addVotesAndCommentsCount(projects: any[]): Promise<ProjectWithVot
       title: project.title,
       description: project.description,
       githubRepo: project.githubRepo,
-      postLink: project.postLink,
+      postLink: project.postLink || project.saasTarget, // Map both field names
       status: project.status,
-      author: project.expand?.author ? project.expand.author.username : project.author,
-      authorId: project.author,
+      // Extract author nickname from the expand relation
+      author: project.expand?.author?.nickname || project.expand?.author?.username || 
+              (typeof project.author === 'string' ? project.author : 'Unknown'),
+      authorId: typeof project.author === 'string' ? project.author : project.author?.id,
       created: project.created,
       updated: project.updated,
       techStack: project.techStack,

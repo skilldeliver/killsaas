@@ -14,6 +14,8 @@ export async function registerUser(nickname: string, password: string, email: st
     // Create a new user record in PocketBase
     const data = {
       username: nickname,
+      name: nickname,        // Add name field for redundancy
+      nickname: nickname,    // Add nickname field for redundancy
       password: password,
       passwordConfirm: password,
       email: email,
@@ -58,7 +60,7 @@ export function getCurrentUser(): User | null {
   
   return {
     id: userData.id,
-    nickname: userData.username,
+    nickname: userData.username || userData.nickname || userData.name || userData.id,
     email: userData.email,
     avatar: userData.avatar ? pb.getFileUrl(userData, userData.avatar) : undefined
   };

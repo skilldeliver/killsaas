@@ -17,15 +17,15 @@ export default function Board() {
   
   const handleNewPost = () => {
     if (isLoggedIn) {
-      router.push("/board/post/edit");
+      router.push("/board/project/edit");
     } else {
       router.push("/login");
     }
   };
   
   return (
-    <main className="w-full flex-1 flex flex-col items-center p-8">
-      <div className="text-center mb-12 w-full max-w-[900px] mx-auto">
+    <main className="w-full flex-1 flex flex-col items-start p-8">
+      <div className="text-left mb-12 w-full max-w-[900px] mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-4xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
             Board
@@ -35,11 +35,11 @@ export default function Board() {
             className="flex items-center gap-2"
           >
             <PlusCircle className="h-4 w-4" />
-            New Post
+            New Project
           </Button>
         </div>
-        <p className="text-[#3B475A]/70 mt-2 max-w-md mx-auto">
-          Post and vote on SaaS products you want to see open-sourced alternatives for
+        <p className="text-[#3B475A]/70 mt-2 max-w-md ">
+Post and vote on SaaS products you want to see <br/> open-sourced alternatives for
         </p>
       </div>
       
