@@ -229,7 +229,7 @@ export default function ProjectDetail() {
                       rel="noopener noreferrer"
                       className="underline hover:text-[#3B475A]/80 text-sm flex items-center"
                     >
-                      {getSiteName(project.postLink || project.saasTarget)}
+                      {project.postLink || project.saasTarget ? getSiteName(project.postLink || project.saasTarget || '') : ''}
                       <ExternalLink className="h-3 w-3 ml-1" />
                     </a>
                   </div>
@@ -266,7 +266,7 @@ export default function ProjectDetail() {
       {/* Comments section */}
       <div className="mt-8">
         <Card className="p-6">
-          <Comments postId={project.id} initialComments={project.comments || []} />
+          <Comments postId={project.id} />
         </Card>
       </div>
     </main>

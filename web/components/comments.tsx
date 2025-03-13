@@ -5,17 +5,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDistanceToNow } from "date-fns";
-import { getCurrentUser, getProjectComments, createComment, Comment } from "@/lib/api";
+import { getCurrentUser, getProjectComments, createComment, CommentWithUser } from "@/lib/api";
 
 // Using the Comment interface from auth.ts
 
 interface CommentsProps {
   postId: string;
-  initialComments?: Comment[];
+  initialComments?: CommentWithUser[];
 }
 
 export function Comments({ postId, initialComments = [] }: CommentsProps) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [comments, setComments] = useState<CommentWithUser[]>(initialComments);
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
@@ -59,8 +59,10 @@ export function Comments({ postId, initialComments = [] }: CommentsProps) {
       const createdComment = await createComment(newCommentData);
       
       // Update local comments state
-      setComments([...comments, createdComment]);
-      setNewComment("");
+      if (createdComment) {
+        setComments([...comments, createdComment]);
+        setNewComment("");
+      }
     } catch (err) {
       console.error('Error posting comment:', err);
       setError('Failed to post comment');

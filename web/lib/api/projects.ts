@@ -9,6 +9,7 @@ export interface Project {
   description?: string;
   githubRepo?: string;
   postLink?: string;
+  saasTarget?: string;
   status: "proposed" | "in_progress" | "completed";
   author: string;
   authorId: string;

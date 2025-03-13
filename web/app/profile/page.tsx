@@ -47,7 +47,7 @@ export default function Profile() {
   };
 
   const handleNewPost = () => {
-    router.push('/board/post/edit');
+    router.push('/board/project/edit');
   };
 
   if (isLoading) {
