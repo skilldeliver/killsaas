@@ -20,16 +20,16 @@ export async function getProjectComments(projectId: string): Promise<CommentWith
   try {
     const records = await pb.collection('comments').getList(1, 50, {
       filter: `project="${projectId}"`,
-      sort: 'created',
-      expand: 'user',
+      sort: '-created',
+      expand: 'author',
       requestKey: `project-comments-${projectId}`
     });
     
     return records.items.map(comment => {
-      const userData = comment.expand?.user;
+      const userData = comment.expand?.author;
       return {
         ...comment,
-        authorName: userData && typeof userData === 'object' ? userData.username : 'Unknown User',
+        authorName: userData && typeof userData === 'object' ? userData.nickname : 'Unknown User',
         authorAvatar: userData && typeof userData === 'object' && userData.avatar ? pb.getFileUrl(userData, userData.avatar) : undefined
       };
     });
@@ -49,7 +49,7 @@ export async function createComment({ projectId, content }: { projectId: string,
     
     const newComment = await pb.collection('comments').create({
       content: content,
-      user: currentUser.id,
+      author: currentUser.id,
       project: projectId
     });
     
