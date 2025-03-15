@@ -22,7 +22,7 @@ services:
     ports:
       - "3003:3000"
     environment:
-      - NEXT_PUBLIC_SERVER_URL=http://server:8090
+      - NEXT_PUBLIC_SERVER_URL=https://pb.kill-saas.com
     depends_on:
       - server
     restart: unless-stopped

@@ -1,7 +1,7 @@
 import PocketBase from 'pocketbase';
 
 // Get the server URL from environment variables with fallback for development
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://127.0.0.1:8090';
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://pb.kill-saas.com';
 
 // Initialize PocketBase with the environment-specific URL
 const pb = new PocketBase(SERVER_URL);
