@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "KillSaaS - Memento Mori",
-  description: "A modern application with custom fonts",
+  description: "Killing SaaS one by one",
   icons: {
     icon: "/black_rose.svg",
   },
