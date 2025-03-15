@@ -5,6 +5,7 @@ import "./globals.css";
 import { Logo } from "@/components/ui/logo";
 import { NavTabs } from "@/components/nav-tabs";
 import { PostHogProvider } from "./providers";
+import { Github } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,8 +50,11 @@ export default function RootLayout({
           </header>
           <NavTabs />
           {children}
-          <footer className="p-4 sm:p-6 md:p-8 border-t flex items-center justify-center gap-4">
+          <footer className="p-4 sm:p-6 md:p-8 border-t flex items-center justify-between">
             <Logo size={24} />
+            <a href="https://github.com/skilldeliver/killsaas" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100">
+              <Github size={20} />
+            </a>
           </footer>
         </div>
         </PostHogProvider>
