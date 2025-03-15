@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cd web && pnpm dev"
+    "dev": "cd web && pnpm dev",
+    "build": "cd web && pnpm build"
   },
   "keywords": [],
   "author": "",

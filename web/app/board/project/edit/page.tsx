@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, PlusCircle, Trash } from "lucide-react";
@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/select";
 import { getCurrentUser, getProjectById, saveProject } from "@/lib/api";
 
-export default function ProjectEdit() {
+// This component uses useSearchParams, so we extract it to wrap it with Suspense
+function ProjectEditForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("id");
@@ -277,5 +278,26 @@ export default function ProjectEdit() {
         </form>
       </Card>
     </main>
+  );
+}
+
+// Main component that wraps the form with Suspense
+export default function ProjectEdit() {
+  return (
+    <Suspense fallback={
+      <main className="w-full flex-1 p-6 md:p-8 max-w-[900px] mx-auto">
+        <div className="mb-6">
+          <Link href="/board" className="inline-flex items-center text-[#3B475A] hover:text-[#3B475A]/80">
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to Board
+          </Link>
+        </div>
+        <Card className="p-6 text-center">
+          <p className="text-[#3B475A]/70">Loading...</p>
+        </Card>
+      </main>
+    }>
+      <ProjectEditForm />
+    </Suspense>
   );
 }

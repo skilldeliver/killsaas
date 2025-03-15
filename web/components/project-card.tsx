@@ -188,7 +188,7 @@ export function ProjectCard({
           </span>
           {(postLink || saasTarget) && (
             <Link 
-              href={postLink || saasTarget} 
+              href={postLink || saasTarget || '#'}
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-sm text-[#3B475A] hover:text-[#3B475A]/80 flex items-center gap-1.5 group"
@@ -197,7 +197,7 @@ export function ProjectCard({
             >
               <div className="relative w-4 h-4 overflow-hidden">
                 <Image 
-                  src={`https://www.google.com/s2/favicons?domain=${new URL(postLink || saasTarget).hostname}&sz=64`}
+                  src={`https://www.google.com/s2/favicons?domain=${new URL(postLink || saasTarget || 'https://example.com').hostname}&sz=64`}
                   alt="Website favicon"
                   width={16}
                   height={16}

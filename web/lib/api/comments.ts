@@ -5,7 +5,7 @@ import { getCurrentUser } from './auth';
 export interface Comment {
   id: string;
   content: string;
-  user: string;
+  author: string;
   project: string;
   created: string;
   updated: string;
@@ -14,6 +14,13 @@ export interface Comment {
 export interface CommentWithUser extends Comment {
   authorName: string;
   authorAvatar?: string;
+  expand?: {
+    author?: {
+      id: string;
+      nickname: string;
+      avatar?: string;
+    };
+  };
 }
 
 export async function getProjectComments(projectId: string): Promise<CommentWithUser[]> {
@@ -27,11 +34,18 @@ export async function getProjectComments(projectId: string): Promise<CommentWith
     
     return records.items.map(comment => {
       const userData = comment.expand?.author;
-      return {
-        ...comment,
+      const result: CommentWithUser = {
+        id: comment.id,
+        content: comment.content,
+        author: comment.author,
+        project: comment.project,
+        created: comment.created,
+        updated: comment.updated,
         authorName: userData && typeof userData === 'object' ? userData.nickname : 'Unknown User',
-        authorAvatar: userData && typeof userData === 'object' && userData.avatar ? pb.getFileUrl(userData, userData.avatar) : undefined
+        authorAvatar: userData && typeof userData === 'object' && userData.avatar ? pb.getFileUrl(userData, userData.avatar) : undefined,
+        expand: comment.expand
       };
+      return result;
     });
   } catch (error) {
     console.error('Error fetching project comments:', error);
@@ -48,17 +62,23 @@ export async function createComment({ projectId, content }: { projectId: string,
     }
     
     const newComment = await pb.collection('comments').create({
-      content: content,
+      content,
       author: currentUser.id,
       project: projectId
     });
     
     // Add author info to the comment for immediate display
-    return {
-      ...newComment,
+    const result: CommentWithUser = {
+      id: newComment.id,
+      content: newComment.content,
+      author: newComment.author,
+      project: newComment.project,
+      created: newComment.created,
+      updated: newComment.updated,
       authorName: currentUser.nickname,
-      authorAvatar: currentUser.avatar
+      authorAvatar: currentUser.avatar ? pb.getFileUrl(currentUser, currentUser.avatar) : undefined
     };
+    return result;
   } catch (error) {
     console.error('Error creating comment:', error);
     return null;

@@ -15,7 +15,13 @@ export async function getUserVotes(userId: string): Promise<Vote[]> {
       filter: `user="${userId}"`,
       requestKey: `user-votes-${userId}`
     });
-    return records.items as Vote[];
+    
+    return records.items.map(record => ({
+      id: record.id,
+      user: record.user,
+      project: record.project,
+      created: record.created
+    }));
   } catch (error) {
     console.error('Error fetching user votes:', error);
     return [];

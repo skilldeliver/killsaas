@@ -86,15 +86,30 @@ export async function saveProject(project: Partial<Project>): Promise<Project | 
       saasTarget: saasTarget || postLink  // Use either field name, preferring saasTarget
     };
     
-    let result;
+    let recordResult;
     
     if (project.id) {
       // Update existing project
-      result = await pb.collection('projects').update(project.id, formData);
+      recordResult = await pb.collection('projects').update(project.id, formData);
     } else {
       // Create new project
-      result = await pb.collection('projects').create(formData);
+      recordResult = await pb.collection('projects').create(formData);
     }
+    
+    // Map the PocketBase record to our Project interface
+    const result: Project = {
+      id: recordResult.id,
+      title: recordResult.title,
+      description: recordResult.description,
+      githubRepo: recordResult.githubRepo,
+      saasTarget: recordResult.saasTarget,
+      status: recordResult.status as "proposed" | "in_progress" | "completed",
+      author: typeof recordResult.author === 'string' ? recordResult.author : 'Unknown',
+      authorId: typeof recordResult.author === 'string' ? recordResult.author : recordResult.author?.id,
+      created: recordResult.created,
+      updated: recordResult.updated,
+      techStack: recordResult.techStack
+    };
     
     return result;
   } catch (error) {
