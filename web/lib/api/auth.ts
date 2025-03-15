@@ -1,4 +1,5 @@
 import pb from './pocketbase';
+import { identifyUser, resetIdentity } from '@/utils/posthog';
 
 // Types
 export interface User {
@@ -36,6 +37,13 @@ export async function loginUser(email: string, password: string): Promise<boolea
   try {
     // Login with PocketBase - this automatically sets the auth cookie
     await pb.collection('users').authWithPassword(email, password);
+    
+    // Identify user in PostHog
+    const user = getCurrentUser();
+    if (user) {
+      identifyUser(user.id, user.nickname);
+    }
+    
     return true;
   } catch (error) {
     console.error('Login error:', error);
@@ -44,6 +52,8 @@ export async function loginUser(email: string, password: string): Promise<boolea
 }
 
 export function logoutUser(): void {
+  // Reset PostHog identity before logging out
+  resetIdentity();
   pb.authStore.clear();
 }
 

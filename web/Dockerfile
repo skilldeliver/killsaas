@@ -15,6 +15,15 @@ COPY . .
 
 # Next.js telemetry is disabled by default in production
 ENV NEXT_TELEMETRY_DISABLED 1
+# Set the server URL for build time
+ARG NEXT_PUBLIC_SERVER_URL=https://pb.kill-saas.com
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+
+# Set PostHog environment variables
+ARG NEXT_PUBLIC_POSTHOG_KEY
+ENV NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
+ARG NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+ENV NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST}
 # Bypass ESLint checks for Docker build
 RUN npm run build -- --no-lint
 
@@ -24,6 +33,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# Pass PostHog environment variables to runtime
+ENV NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
+ENV NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST}
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs

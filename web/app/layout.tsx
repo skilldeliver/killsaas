@@ -4,6 +4,7 @@ import { louize } from "./fonts";
 import "./globals.css";
 import { Logo } from "@/components/ui/logo";
 import { NavTabs } from "@/components/nav-tabs";
+import { PostHogProvider } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +42,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${louize.variable} antialiased bg-[#F9FAFC] min-h-screen`}
       >
-        <div className="max-w-[1200px] w-full mx-auto bg-white shadow-lg min-h-screen">
+        <PostHogProvider>
+          <div className="max-w-[1200px] w-full mx-auto bg-white shadow-lg min-h-screen">
           <header className="p-4 sm:p-6 md:p-8 border-b flex items-center justify-center">
             <Logo size={24} />
           </header>
@@ -51,6 +53,7 @@ export default function RootLayout({
             <Logo size={24} />
           </footer>
         </div>
+        </PostHogProvider>
       </body>
     </html>
   );
