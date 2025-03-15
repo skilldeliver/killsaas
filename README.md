@@ -15,7 +15,7 @@ A platform for users to post and vote on SaaS products they want to see open-sou
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/killsaas.git
+   git clone https://github.com/skilldeliver/killsaas.git
    cd killsaas
    ```
 
