@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: killsaas-server
+    ports:
+      - "8091:8090"
+    volumes:
+      - pb_data:/app/pb_data
+    restart: unless-stopped
+    networks:
+      - killsaas-network
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: killsaas-web
+    ports:
+      - "3003:3000"
+    environment:
+      - SERVER_URL=http://server:8090
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - killsaas-network
+
+volumes:
+  pb_data:
+    name: killsaas-pb-data
+
+networks:
+  killsaas-network:
+    name: killsaas-network
