@@ -125,8 +125,8 @@ export default function ProjectDetail() {
   const isAuthor = currentUser && currentUser.nickname && currentUser.nickname === project.author;
 
   return (
-    <main className="w-full flex-1 p-6 md:p-8 max-w-[1200px] mx-auto">
-      <div className="mb-6 flex justify-between">
+    <main className="w-full flex-1 p-4 sm:p-6 md:p-8 max-w-[1200px] mx-auto">
+      <div className="mb-6 flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
         <Link href="/board" className="inline-flex items-center text-[#3B475A] hover:text-[#3B475A]/80">
           <ChevronLeft className="h-4 w-4 mr-1" />
           Back to Board
@@ -137,7 +137,7 @@ export default function ProjectDetail() {
             variant="outline" 
             size="sm"
             onClick={() => router.push(`/board/project/edit?id=${project.id}`)}
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 w-full sm:w-auto justify-center"
           >
             <Edit className="h-4 w-4" />
             Edit
@@ -146,7 +146,7 @@ export default function ProjectDetail() {
       </div>
 
       {/* Status and Vote Banner */}
-      <div className="mb-6 flex justify-between items-center w-full py-3 px-4 border rounded-md">
+      <div className="mb-6 flex flex-wrap justify-between items-center w-full py-3 px-4 border rounded-md gap-3">
         <div className="flex items-center">
           <span className="inline-block px-2 py-0.5 text-xs border rounded-full text-[#3B475A]">
             {project.status === "proposed" ? "Proposed" : 
@@ -169,22 +169,22 @@ export default function ProjectDetail() {
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* Left side - Post details */}
         <div className="flex-1 lg:w-2/3 flex">
-          <Card className="p-6 w-full flex flex-col">
-            <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-louize)] mb-4 text-[#3B475A]">
+          <Card className="p-4 sm:p-6 w-full flex flex-col">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold font-[family-name:var(--font-louize)] mb-4 text-[#3B475A]">
               {project.title}
             </h1>
             
-            <div className="text-[#3B475A] mb-6">
+            <div className="text-[#3B475A] mb-6 text-sm sm:text-base">
               {project.description || "No description provided."}
             </div>
             
-            <div className="flex flex-col space-y-2 text-sm text-[#3B475A]">
+            <div className="flex flex-col space-y-2 text-xs sm:text-sm text-[#3B475A]">
               <div className="flex items-center">
-                <span className="font-semibold w-24">Posted by:</span>
+                <span className="font-semibold w-20 sm:w-24">Posted by:</span>
                 <span>{project.author}</span>
               </div>
               <div className="flex items-center">
-                <span className="font-semibold w-24">Date:</span>
+                <span className="font-semibold w-20 sm:w-24">Date:</span>
                 <span>{new Date(project.created).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -197,22 +197,22 @@ export default function ProjectDetail() {
 
         {/* Right side - Technical details */}
         <div className="lg:w-1/3 flex">
-          <Card className="p-6 w-full flex flex-col">
+          <Card className="p-4 sm:p-6 w-full flex flex-col">
             
             <div className="space-y-4 text-[#3B475A]">
               {project.githubRepo && (
                 <div className="flex items-start">
                   <Github className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <div className="font-medium">Repo</div>
+                  <div className="overflow-hidden">
+                    <div className="font-medium text-sm sm:text-base">Repo</div>
                     <a 
                       href={project.githubRepo} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="underline hover:text-[#3B475A]/80 text-sm flex items-center"
+                      className="underline hover:text-[#3B475A]/80 text-xs sm:text-sm flex items-center truncate max-w-full"
                     >
                       {project.githubRepo.replace('https://github.com/', '')}
-                      <ExternalLink className="h-3 w-3 ml-1" />
+                      <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0" />
                     </a>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ export default function ProjectDetail() {
 
       {/* Comments section */}
       <div className="mt-8">
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <Comments postId={project.id} />
         </Card>
       </div>

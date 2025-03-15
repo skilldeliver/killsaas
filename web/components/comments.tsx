@@ -86,7 +86,7 @@ export function Comments({ postId, initialComments = [] }: CommentsProps) {
 
   return (
     <div className="w-full space-y-6">
-      <h2 className="text-2xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
+      <h2 className="text-xl sm:text-2xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
         Comments ({comments.length})
       </h2>
       
@@ -103,7 +103,7 @@ export function Comments({ postId, initialComments = [] }: CommentsProps) {
           <Button 
             type="submit"
             disabled={!newComment.trim() || isSending}
-            className="font-[family-name:var(--font-geist-sans)]"
+            className="font-[family-name:var(--font-geist-sans)] w-full sm:w-auto"
           >
             {isSending ? "Posting..." : "Post Comment"}
           </Button>
@@ -127,19 +127,19 @@ export function Comments({ postId, initialComments = [] }: CommentsProps) {
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="border-b pb-6">
-              <div className="flex items-start gap-4">
-                <Avatar>
+              <div className="flex items-start gap-3 sm:gap-4">
+                <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                   <AvatarImage src={comment.authorAvatar} alt={comment.authorName} />
                   <AvatarFallback>{comment.authorName && comment.authorName.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-[#3B475A]">{comment.authorName}</h3>
-                    <time className="text-sm text-[#3B475A]/70">
+                <div className="flex-1 min-w-0"> {/* min-w-0 prevents overflow on small screens */}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                    <h3 className="font-semibold text-[#3B475A] text-sm sm:text-base truncate">{comment.authorName}</h3>
+                    <time className="text-xs sm:text-sm text-[#3B475A]/70">
                       {formatDistanceToNow(new Date(comment.created), { addSuffix: true })}
                     </time>
                   </div>
-                  <p className="mt-2 whitespace-pre-wrap text-[#3B475A]">{comment.content}</p>
+                  <p className="mt-2 whitespace-pre-wrap text-[#3B475A] text-sm sm:text-base break-words">{comment.content}</p>
                 </div>
               </div>
             </div>

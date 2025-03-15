@@ -71,39 +71,39 @@ export default function Profile() {
   }
 
   return (
-    <main className="flex-1 flex flex-col items-center p-8">
+    <main className="flex-1 flex flex-col items-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-[900px] mx-auto">
-        <div className="flex items-center justify-between mb-8 p-6 rounded-lg border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 p-4 sm:p-6 rounded-lg border gap-4">
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 border-2 border-white">
+            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-white">
               {user.avatar ? (
                 <img src={user.avatar} alt={user.nickname} className="h-full w-full object-cover" />
               ) : (
                 <div className="bg-gray-300 h-full w-full flex items-center justify-center">
-                  <span className="text-2xl font-semibold text-gray-700">
+                  <span className="text-lg sm:text-2xl font-semibold text-gray-700">
                     {user.nickname ? user.nickname.charAt(0).toUpperCase() : '?'}
                   </span>
                 </div>
               )}
             </Avatar>
             <div>
-              <h1 className="text-2xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
+              <h1 className="text-xl sm:text-2xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
                 {user.nickname}
               </h1>
               <p className="text-[#3B475A]/70">Member</p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout} className="text-[#3B475A]">
+          <Button variant="outline" onClick={handleLogout} className="text-[#3B475A] w-full sm:w-auto">
             Sign Out
           </Button>
         </div>
 
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-0">
             <h2 className="text-xl font-semibold text-[#3B475A]">My Projects</h2>
             <Button 
               onClick={handleNewPost}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto"
               size="sm"
             >
               <PlusCircle className="h-4 w-4" />
