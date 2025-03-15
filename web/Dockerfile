@@ -41,8 +41,5 @@ USER nextjs
 # Expose the application port
 EXPOSE 3000
 
-# Define environment variable for server URL (can be overridden)
-ENV SERVER_URL=http://server:8090
-
 # Start the Next.js app
 CMD ["npm", "start"]

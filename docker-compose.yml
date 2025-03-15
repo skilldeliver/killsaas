@@ -22,7 +22,7 @@ services:
     ports:
       - "3003:3000"
     environment:
-      - SERVER_URL=http://server:8090
+      - NEXT_PUBLIC_SERVER_URL=http://server:8090
     depends_on:
       - server
     restart: unless-stopped

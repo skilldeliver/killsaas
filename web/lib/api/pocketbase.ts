@@ -1,9 +1,14 @@
 import PocketBase from 'pocketbase';
 
-// Initialize PocketBase
-const pb = new PocketBase('http://127.0.0.1:8090');
+// Get the server URL from environment variables with fallback for development
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://127.0.0.1:8090';
+
+// Initialize PocketBase with the environment-specific URL
+const pb = new PocketBase(SERVER_URL);
 
 // Disable auto cancellation by default to prevent the errors
 pb.autoCancellation(false);
 
 export default pb;
+
+export { SERVER_URL };
