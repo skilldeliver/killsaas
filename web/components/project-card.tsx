@@ -196,7 +196,7 @@ export function ProjectCard({
               onMouseLeave={() => setIsHovering(false)}
             >
               <div className="relative w-4 h-4 overflow-hidden">
-                <Image 
+                <img 
                   src={`https://www.google.com/s2/favicons?domain=${new URL(postLink || saasTarget || 'https://example.com').hostname}&sz=64`}
                   alt="Website favicon"
                   width={16}
