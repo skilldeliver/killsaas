@@ -9,6 +9,7 @@ import { Menu, X } from 'lucide-react';
 
 const tabs = [
   { name: 'Board', href: '/board' },
+  { name: 'Posts', href: '/posts' },
   { name: 'Manifesto', href: '/manifesto' },
 ];
 

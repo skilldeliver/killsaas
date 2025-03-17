@@ -1,6 +1,6 @@
 # Domain snipe in the day of launch
 
-I created my [repository](https://github.com/skilldeliver/killsaas) for my project for launching open source SaaS alternatives **_KillSaaS_** and started developing the project, pushing code changes, etc. After investing some development time (primarily by vibe coding with [Windsurf](https://windsurf.ai)), it was time to launch the project.
+I created [repository](https://github.com/skilldeliver/killsaas) for my project for launching open source SaaS alternatives **_KillSaaS_** and started developing the project, pushing code changes, etc. After investing some development time (primarily by vibe coding with [Windsurf](https://windsurf.ai)), it was time to launch the project.
 
 Of course, I needed to buy a domain for my project. I opened [Namecheap](https://www.namecheap.com) and was shocked because the domain I wanted was already bought TODAY.
 
