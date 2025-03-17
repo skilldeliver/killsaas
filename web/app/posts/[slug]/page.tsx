@@ -3,7 +3,9 @@ import path from 'path';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export default function Post({ params }: { params: { slug: string } }) {
+export default async function Post() {
+  // Make the function async to match Next.js expectations
+  
   // For now, we'll only have one post
   const content = fs.readFileSync(
     path.join(process.cwd(), 'posts', 'DOMAIN.md'),
