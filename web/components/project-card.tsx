@@ -19,15 +19,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-type ProjectStatus = "proposed" | "in_progress" | "completed";
-
 interface ProjectCardProps extends React.ComponentProps<typeof Card> {
   id: string;
   title: string;
   githubRepo?: string;
   postLink?: string;
   saasTarget?: string;
-  status: ProjectStatus;
   upvotes?: number;
   commentsCount?: number;
   className?: string;
@@ -40,7 +37,6 @@ export function ProjectCard({
   githubRepo,
   postLink,
   saasTarget,
-  status,
   upvotes = 0,
   commentsCount = 0,
   className,
@@ -183,9 +179,6 @@ export function ProjectCard({
           </div>
         </div>
         <div className="mt-1 flex items-center gap-2">
-          <span className="inline-block px-2 py-0.5 text-xs border rounded-full text-[#3B475A]">
-            {getStatusLabel(status)}
-          </span>
           {(postLink || saasTarget) && (
             <Link 
               href={postLink || saasTarget || '#'}

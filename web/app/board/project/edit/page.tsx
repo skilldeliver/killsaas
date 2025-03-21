@@ -29,7 +29,6 @@ function ProjectEditForm() {
   const [description, setDescription] = useState("");
   const [githubRepo, setGithubRepo] = useState("");
   const [saasTarget, setSaasTarget] = useState("");
-  const [status, setStatus] = useState<"proposed" | "in_progress" | "completed">("proposed");
   const [techStack, setTechStack] = useState<string[]>([]);
   const [techInput, setTechInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -61,7 +60,6 @@ function ProjectEditForm() {
             setDescription(project.description || "");
             setGithubRepo(project.githubRepo || "");
             setSaasTarget(project.postLink || project.saasTarget || "");
-            setStatus(project.status);
             setTechStack(project.techStack || []);
           } else {
             // Project not found
@@ -110,7 +108,6 @@ function ProjectEditForm() {
         description,
         githubRepo,
         saasTarget,
-        status,
         techStack
       };
       
@@ -204,23 +201,6 @@ function ProjectEditForm() {
               onChange={(e) => setSaasTarget(e.target.value)} 
               placeholder="https://example.com"
             />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select 
-              value={status} 
-              onValueChange={(value: "proposed" | "in_progress" | "completed") => setStatus(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="proposed">Proposed</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
           
           <div className="space-y-2">

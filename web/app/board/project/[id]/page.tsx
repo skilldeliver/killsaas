@@ -148,11 +148,6 @@ export default function ProjectDetail() {
       {/* Status and Vote Banner */}
       <div className="mb-6 flex flex-wrap justify-between items-center w-full py-3 px-4 border rounded-md gap-3">
         <div className="flex items-center">
-          <span className="inline-block px-2 py-0.5 text-xs border rounded-full text-[#3B475A]">
-            {project.status === "proposed" ? "Proposed" : 
-             project.status === "in_progress" ? "In Progress" : 
-             project.status === "completed" ? "Completed" : project.status}
-          </span>
         </div>
         <Button 
           variant="outline" 
