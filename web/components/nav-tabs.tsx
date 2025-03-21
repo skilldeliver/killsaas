@@ -11,6 +11,7 @@ const tabs = [
   { name: 'Board', href: '/board' },
   { name: 'Posts', href: '/posts' },
   { name: 'Manifesto', href: '/manifesto' },
+  { name: 'Analytics', href: '/analytics' },
 ];
 
 export function NavTabs() {

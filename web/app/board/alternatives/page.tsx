@@ -34,7 +34,7 @@ export default function Alternatives() {
   const getFaviconUrl = (url: string) => {
     try {
       const urlObj = new URL(url);
-      return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
+      return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
     } catch {
       return '/default-favicon.png';
     }
@@ -60,17 +60,21 @@ export default function Alternatives() {
               rel="noopener noreferrer"
               className="flex items-center gap-4"
             >
-              <img 
-                src={getFaviconUrl(item.url)} 
-                alt="Favicon" 
-                className="h-8 w-8 rounded"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/default-favicon.png';
-                }}
-              />
+              <div className="relative w-8 h-8 overflow-hidden">
+                <img 
+                  src={getFaviconUrl(item.url)}
+                  alt="Website favicon"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/default-favicon.png';
+                  }}
+                />
+              </div>
               <span className="text-[#3B475A] font-medium truncate">
-                {new URL(item.url).hostname}
+                {new URL(item.url).hostname.replace(/^www\./, '')}
               </span>
             </a>
           </Card>
