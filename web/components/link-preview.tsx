@@ -17,6 +17,7 @@ interface PreviewData {
 export function LinkPreview({ url, width = 300, fallback }: LinkPreviewProps) {
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [error, setError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const fetchPreview = async () => {
@@ -58,13 +59,16 @@ export function LinkPreview({ url, width = 300, fallback }: LinkPreviewProps) {
       rel="noopener noreferrer"
       className="block border rounded-lg overflow-hidden w-full hover:border-[#3B475A]/30 transition-colors"
     >
-      {preview.image && (
+      {preview.image && !imageError && (
         <div className="relative w-full h-64">
           <Image
             src={preview.image}
             alt={preview.title}
             fill
             className="object-cover"
+            onError={() => setImageError(true)}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
           />
         </div>
       )}
