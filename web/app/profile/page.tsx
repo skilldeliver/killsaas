@@ -124,7 +124,6 @@ export default function Profile() {
                   title={project.title}
                   githubRepo={project.githubRepo}
                   postLink={project.postLink}
-                  status={project.status}
                   upvotes={project.upvotes}
                   commentsCount={project.commentsCount}
                   author={project.author}

@@ -91,19 +91,6 @@ export function ProjectCard({
     checkVoteStatus();
   }, [postLink, author, upvotes, id]);
 
-  const getStatusLabel = (status: ProjectStatus) => {
-    switch (status) {
-      case "proposed":
-        return "Proposed";
-      case "in_progress":
-        return "In Progress";
-      case "completed":
-        return "Completed";
-      default:
-        return status;
-    }
-  };
-
   const handleCardClick = (e: React.MouseEvent) => {
     // Prevent navigation if clicking on links or buttons inside the card
     if ((e.target as HTMLElement).closest('a, button')) {

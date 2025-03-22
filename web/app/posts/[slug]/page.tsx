@@ -1,11 +1,19 @@
+import { use } from 'react';
 import fs from 'fs';
 import path from 'path';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export default async function Post({ params }: { params: { slug: string } }) {
+type Params = Promise<{
+  slug: string;
+}>;
+
+export default function Post(props: { params: Params }) {
+  const params = use(props.params);
+  const slug = params.slug;
+
   const content = fs.readFileSync(
-    path.join(process.cwd(), 'posts', `${params.slug}.md`),
+    path.join(process.cwd(), 'posts', `${slug}.md`),
     'utf-8'
   );
 
@@ -14,7 +22,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
     {
       title: "From 0 to 5 users",
       date: "23.03.2025",
-      slug: "from-0-to-5",
+      slug: "from-0-to-5", 
       thumbnail: "/posts/from-0-to-5.png",
       excerpt: "A journey of acquiring the first users for an open source project, and the lessons learned along the way."
     },
@@ -27,7 +35,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
     }
   ];
 
-  const post = posts.find(p => p.slug === params.slug);
+  const post = posts.find(p => p.slug === slug);
 
   return (
     <main className="flex-1 flex flex-col items-center p-8 text-[#3B475A]">
@@ -57,7 +65,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
               <p {...props} className="my-4" />
             ),
             h1: ({ node, ...props }) => (
-            <h1 {...props} className="text-4xl font-bold font-[family-name:var(--font-louize)] mb-8" />
+              <h1 {...props} className="text-4xl font-bold font-[family-name:var(--font-louize)] mb-8" />
             ),
             ul: ({ node, ...props }) => (
               <ul {...props} className="list-disc pl-4 my-4" />
