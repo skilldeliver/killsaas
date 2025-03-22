@@ -8,7 +8,7 @@ import { getCurrentUser, logoutUser, isAuthenticated } from '@/lib/auth';
 import { Menu, X } from 'lucide-react';
 
 const tabs = [
-  { name: 'Board', href: '/board' },
+  { name: 'Board', href: '/board/suggestions' },
   { name: 'Posts', href: '/posts' },
   { name: 'Manifesto', href: '/manifesto' },
   { name: 'Analytics', href: '/analytics' },
@@ -43,7 +43,9 @@ export function NavTabs() {
       <>
         <div className="flex flex-col md:flex-row">
           {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
+            const isActive = tab.href === '/board/suggestions' 
+              ? pathname.startsWith('/board/')
+              : pathname === tab.href;
             
             return (
               <Link

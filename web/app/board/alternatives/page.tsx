@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/lib/api";
+import Link from "next/link";
 
 interface SaasItem {
   id: string;
@@ -72,10 +73,8 @@ export default function Alternatives() {
       ) : (
         saasItems.map((item) => (
           <Card key={item.id} className="p-4 hover:shadow-md transition-shadow">
-            <a 
-              href={item.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href={`/board/alternatives/${item.id}`}
               className="flex items-center gap-4"
             >
               <div className="relative w-8 h-8 overflow-hidden">
@@ -94,7 +93,7 @@ export default function Alternatives() {
               <span className="text-[#3B475A] font-medium truncate">
                 {new URL(item.url).hostname.replace(/^www\./, '')}
               </span>
-            </a>
+            </Link>
           </Card>
         ))
       )}
