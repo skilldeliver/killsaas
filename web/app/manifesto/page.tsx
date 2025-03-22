@@ -3,7 +3,7 @@ export default function Manifesto() {
     <main className="flex-1 flex flex-col items-center p-8 text-[#3B475A]">
       <section className="max-w-3xl mx-auto prose prose-slate font-[family-name:var(--font-louize)] text-2xl]">
         <h2 className="text-4xl font-bold font-[family-name:var(--font-louize)] text-center mb-8">
-          Manifesto<span className="font-normal text-lg text-[#7A8B9C]">(kinda)</span>
+          Manifesto<span className="font-normal text-lg text-[#7A8B9C]"> (kinda)</span>
         </h2>
         <p>We're at a turning point.<br/>
 Making simple software has never been this easy.<br/><br/>
