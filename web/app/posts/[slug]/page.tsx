@@ -3,18 +3,44 @@ import path from 'path';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export default async function Post() {
-  // Make the function async to match Next.js expectations
-  
-  // For now, we'll only have one post
+export default async function Post({ params }: { params: { slug: string } }) {
   const content = fs.readFileSync(
-    path.join(process.cwd(), 'posts', 'DOMAIN.md'),
+    path.join(process.cwd(), 'posts', `${params.slug}.md`),
     'utf-8'
   );
+
+  // Get post metadata
+  const posts = [
+    {
+      title: "From 0 to 5 users",
+      date: "23.03.2025",
+      slug: "from-0-to-5",
+      thumbnail: "/posts/from-0-to-5.png",
+      excerpt: "A journey of acquiring the first users for an open source project, and the lessons learned along the way."
+    },
+    {
+      title: "Domain snipe in the day of launch",
+      date: "17.03.2025",
+      slug: "domain-snipe",
+      thumbnail: "/posts/domain-snipe.png",
+      excerpt: "A story about how someone sniped the domain name I wanted on launch day, and how I turned it into an opportunity."
+    }
+  ];
+
+  const post = posts.find(p => p.slug === params.slug);
 
   return (
     <main className="flex-1 flex flex-col items-center p-8 text-[#3B475A]">
       <article className="max-w-3xl py-24 mx-auto prose prose-slate">
+        {post?.thumbnail && (
+          <div className="relative w-full h-24 overflow-hidden rounded-lg mb-8">
+            <img 
+              src={post.thumbnail}
+              alt={post.title}
+              className="object-cover w-full h-full"
+            />
+          </div>
+        )}
         <ReactMarkdown 
           remarkPlugins={[remarkGfm]}
           components={{
@@ -31,7 +57,13 @@ export default async function Post() {
               <p {...props} className="my-4" />
             ),
             h1: ({ node, ...props }) => (
-              <h1 {...props} className="text-4xl font-bold mb-8" />
+            <h1 {...props} className="text-4xl font-bold font-[family-name:var(--font-louize)] mb-8" />
+            ),
+            ul: ({ node, ...props }) => (
+              <ul {...props} className="list-disc pl-4 my-4" />
+            ),
+            ol: ({ node, ...props }) => (
+              <ol {...props} className="list-decimal pl-4 my-4" />
             ),
           }}
         >
@@ -39,7 +71,7 @@ export default async function Post() {
         </ReactMarkdown>
       </article>
       <div className="flex items-center gap-4">
-        <p className="text-[#7A8B9C]">17/03/2025</p>
+        <p className="text-[#7A8B9C]">{post?.date}</p>
         <p className="text-[#7A8B9C]">Skilldeliver</p>
       </div>
     </main>

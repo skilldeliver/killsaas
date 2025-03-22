@@ -1,4 +1,4 @@
-# Domain snipe in the day of launch
+# Domain Snipe In The Day Of Launch
 
 I created [repository](https://github.com/skilldeliver/killsaas) for my project for launching open source SaaS alternatives **_KillSaaS_** and started developing the project, pushing code changes, etc. After investing some development time (primarily by vibe coding with [Windsurf](https://windsurf.ai)), it was time to launch the project.
 

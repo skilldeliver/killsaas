@@ -140,7 +140,7 @@ export default function SaasAlternativeDetail() {
         author: "anonymous", // You might want to get this from user context
       };
 
-      await pb.collection('alternatives').create(newAlternative);
+      const createdAlternative = await pb.collection('alternatives').create(newAlternative);
       
       // Refresh the alternatives list
       const alternativesList = await pb.collection('alternatives').getList(1, 50, {
@@ -156,6 +156,23 @@ export default function SaasAlternativeDetail() {
         url: item.url,
       })) as Alternative[];
       setAlternatives(typedAlternatives);
+
+      // If the new alternative is a GitHub URL, fetch its data
+      if (newAlternativeUrl.includes('github.com')) {
+        try {
+          const [owner, repo] = newAlternativeUrl.replace('https://github.com/', '').split('/');
+          const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+          if (response.ok) {
+            const data = await response.json();
+            setGithubData(prev => ({
+              ...prev,
+              [createdAlternative.id]: data
+            }));
+          }
+        } catch (error) {
+          console.error(`Error fetching GitHub data for ${newAlternativeUrl}:`, error);
+        }
+      }
 
       // Reset form and close dialog
       setNewAlternativeUrl("");
