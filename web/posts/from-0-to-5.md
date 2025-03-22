@@ -10,6 +10,8 @@ we partnered with a guy who managed a couple of communities in Discord and he jo
 Shortly after that we hit 20K users for our SaaS but we eventually got outcompeted by VC backed companies, we lost momentum and our SaaS just died.
 After that, I didn't have any attempts for replicating this, I focused on B2B and landing contracts because you need to make some money to live, right?
 
+![First blockchain SaaS](https://github.com/user-attachments/assets/d0197a36-daa5-46aa-91e2-157e95dab8b2)
+
 But now I realized that the growing of my previous "successful" SaaS, it wasn't about me. I was not the person who was the driving force behind the growth. And lately I realized that I want to learn how to grow things.
 
 Now it is getting easier to start any type of software related project because tools like Cursor and Windsurf are making the development easier than ever. So let's get to the point, what I launched and how I got the first 5 users:
