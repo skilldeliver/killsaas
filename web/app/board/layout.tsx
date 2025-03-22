@@ -1,5 +1,6 @@
 "use client";
 
+
 import { usePathname, useRouter } from "next/navigation";
 import { Lightbulb, GitCompare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,7 +25,8 @@ const navItems: NavItem[] = [
     icon: <GitCompare className="h-4 w-4" />,
     label: "Alternatives",
     path: "/board/alternatives",
-    description: "Browse existing alternatives"
+    description: "Browse existing alternatives",
+    isActive: (pathname) => pathname === "/board/alternatives" || pathname.startsWith("/board/alternatives/")
   }
 ];
 
@@ -39,7 +41,7 @@ export default function BoardLayout({
   return (
     <div className="w-full flex-1 flex flex-col">
       <div className="border-b">
-        <div className="flex gap-2 py-4 max-w-[900px] mx-auto">
+        <div className="flex gap-2 py-4 max-w-[900px] mx-auto justify-end">
           {navItems.map((item) => (
             <button
               key={item.path}
@@ -47,7 +49,7 @@ export default function BoardLayout({
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-colors",
                 (item.isActive ? item.isActive(pathname) : pathname === item.path)
-                  ? "bg-[#3B475A] text-white"
+                  ? "border-2 border-[#3B475A] text-black"
                   : "text-[#3B475A] hover:bg-[#3B475A]/5"
               )}
               title={item.description}
@@ -61,4 +63,4 @@ export default function BoardLayout({
       {children}
     </div>
   );
-} 
+}

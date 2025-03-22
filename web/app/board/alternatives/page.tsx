@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import pb from "@/lib/pocketbase";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/api";
 
 interface SaasItem {
   id: string;
@@ -15,6 +19,12 @@ interface SaasItem {
 export default function Alternatives() {
   const [saasItems, setSaasItems] = useState<SaasItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+  }, []);
 
   useEffect(() => {
     const fetchSaasItems = async () => {
@@ -30,6 +40,14 @@ export default function Alternatives() {
 
     fetchSaasItems();
   }, []);
+
+  const handleNewClick = () => {
+    if (isLoggedIn) {
+      router.push("/board/alternatives/new");
+    } else {
+      router.push("/login");
+    }
+  };
 
   const getFaviconUrl = (url: string) => {
     try {
@@ -86,12 +104,23 @@ export default function Alternatives() {
   return (
     <main className="w-full flex-1 flex flex-col items-start p-8">
       <div className="text-left mb-12 w-full max-w-[900px] mx-auto">
-        <h1 className="text-4xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
-          Alternatives
-        </h1>
-        <p className="text-[#3B475A]/70 mt-2">
-          Browse existing SaaS alternatives
-        </p>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-4xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
+              Alternatives
+            </h1>
+            <p className="text-[#3B475A]/70 mt-2">
+              Browse existing SaaS alternatives
+            </p>
+          </div>
+          <Button 
+            onClick={handleNewClick}
+            className="flex items-center gap-2"
+          >
+            <PlusCircle className="h-4 w-4" />
+            New
+          </Button>
+        </div>
       </div>
       <div className="w-full max-w-[900px] mx-auto">
         {renderContent()}

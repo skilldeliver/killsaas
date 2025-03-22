@@ -14,7 +14,7 @@ export default async function Post() {
 
   return (
     <main className="flex-1 flex flex-col items-center p-8 text-[#3B475A]">
-      <article className="max-w-3xl py-24 mx-auto prose prose-slate text-2xl">
+      <article className="max-w-3xl py-24 mx-auto prose prose-slate">
         <ReactMarkdown 
           remarkPlugins={[remarkGfm]}
           components={{
