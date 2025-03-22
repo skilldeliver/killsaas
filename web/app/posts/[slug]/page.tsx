@@ -67,6 +67,9 @@ export default function Post(props: { params: Params }) {
             h1: ({ node, ...props }) => (
               <h1 {...props} className="text-4xl font-bold font-[family-name:var(--font-louize)] mb-8" />
             ),
+            h2: ({ node, ...props }) => (
+              <h2 {...props} className="text-2xl font-bold font-[family-name:var(--font-louize)] mb-4" />
+            ),
             ul: ({ node, ...props }) => (
               <ul {...props} className="list-disc pl-4 my-4" />
             ),
