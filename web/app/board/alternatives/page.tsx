@@ -109,21 +109,21 @@ export default function Alternatives() {
   return (
     <main className="w-full flex-1 flex flex-col items-start p-8">
       <div className="text-left mb-12 w-full max-w-[900px] mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
             <h1 className="text-4xl font-bold font-[family-name:var(--font-louize)] text-[#3B475A]">
               Alternatives
             </h1>
             <p className="text-[#3B475A]/70 mt-2">
-              Browse existing SaaS alternatives
+              Browse and contribute open-source alternatives to popular SaaS products
             </p>
           </div>
           <Button 
             onClick={handleNewClick}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto"
           >
             <PlusCircle className="h-4 w-4" />
-            New
+            New Alternative
           </Button>
         </div>
       </div>

@@ -45,7 +45,9 @@ export function NavTabs() {
           {tabs.map((tab) => {
             const isActive = tab.href === '/board/suggestions' 
               ? pathname.startsWith('/board/')
-              : pathname === tab.href;
+              : tab.href === '/posts'
+                ? pathname.startsWith('/posts')
+                : pathname === tab.href;
             
             return (
               <Link
