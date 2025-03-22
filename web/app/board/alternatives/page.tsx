@@ -91,7 +91,13 @@ export default function Alternatives() {
                 />
               </div>
               <span className="text-[#3B475A] font-medium truncate">
-                {new URL(item.url).hostname.replace(/^www\./, '')}
+                {(() => {
+                  try {
+                    return new URL(item.url).hostname.replace(/^www\./, '');
+                  } catch {
+                    return item.url;
+                  }
+                })()}
               </span>
             </Link>
           </Card>
